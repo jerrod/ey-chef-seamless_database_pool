@@ -1,0 +1,14 @@
+<%= @node[:environment][:framework_env] %>:
+  adapter: seamless_database_pool
+  database: <%= @node[:engineyard][:environment][:apps].find{|d| d[:name] = @app_name }[:database_name] %>
+  username: <%=@node[:users].first[:username]%>
+  password: <%=@node[:users].first[:password]%>
+  pool_adapter: <%= @node[:ruby_version] =~ /1\.9/ ? 'mysql2' : 'mysql' %>
+  port: 3306
+  encoding: utf8
+  master:
+    host: <%=@node[:db_host]%>
+  read_pool:
+    <% @node[:db_slaves].each do |slave| %>
+    - host: <%= slave %>
+    <% end %>
